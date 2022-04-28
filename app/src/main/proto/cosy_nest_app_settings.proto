@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "red.tetracube.cosynestapp.application.settings";
+option java_multiple_files = true;
+
+message CosyNestAppSettings {
+  repeated ConnectedNest connected_nests = 2;
+}
+
+message ConnectedNest {
+  string api_base_url = 1;
+  string web_socket_url = 2;
+  string alias = 3;
+  string username = 4;
+  string auth_token = 5;
+  bool current_server = 6;
+  string nest_id = 7;
+}
