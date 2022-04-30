@@ -1,4 +1,4 @@
-package red.tetracube.cosynestapp.enumerations
+package red.tetracube.cosynestapp.definitions
 
 enum class NavigationIconType {
     BACK,

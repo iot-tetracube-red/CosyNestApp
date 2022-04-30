@@ -1,6 +1,8 @@
 package red.tetracube.cosynestapp
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,11 +13,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import red.tetracube.cosynestapp.application.model.CosyNestAppViewData
 import red.tetracube.cosynestapp.application.model.CosyNestAppViewModel
-import red.tetracube.cosynestapp.enumerations.NavigationIconType
+import red.tetracube.cosynestapp.definitions.NavigationIconType
+import red.tetracube.cosynestapp.definitions.RoutesDefinitions
+import red.tetracube.cosynestapp.settings.nest.configure.ConfigureNestSettings
+import red.tetracube.cosynestapp.settings.nest.configure.model.ConfigureNestViewModel
 import red.tetracube.cosynestapp.settings.settingsDataStore
+import red.tetracube.cosynestapp.shared.AlertDialogView
 import red.tetracube.cosynestapp.ui.theme.CosyNestAppTheme
 
 @Composable
@@ -28,7 +36,7 @@ fun CosyNestApplication(
     val cosyNestAppData = viewModelData.cosyNestAppState.collectAsState().value
 
     LaunchedEffect(key1 = Unit, block = {
-        //  viewModel.loadApplicationSettings(dataStore)
+        viewModelData.loadApplicationSettings(dataStore)
     })
 
     /*val applicationData = ApplicationData(
@@ -73,13 +81,13 @@ fun CosyNestApplicationView(
                     )
                 }
             ) {
-                /*MainNavigation(
+                MainNavigation(
+                    it,
                     navController,
                     cosyNestAppData,
-                    it,
                     setNavigationIconVisible,
                     setTitle
-                )*/
+                )
             }
         }
     }
@@ -111,4 +119,65 @@ fun TopAppBar(
         actions = {
         }
     )
+}
+
+@Composable
+fun MainNavigation(
+    innerPadding: PaddingValues,
+    navHostController: NavHostController,
+    cosyNestAppData: CosyNestAppViewData,
+    setNavigationIconVisible: (Boolean) -> Unit,
+    screenTitleSetter: (String?) -> Unit
+) {
+    NavHost(
+        navController = navHostController,
+        startDestination = RoutesDefinitions.HOME,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        composable(RoutesDefinitions.HOME) {
+            ManageDialog(cosyNestAppData, navHostController)
+            setNavigationIconVisible(false)
+            screenTitleSetter(null)
+            /*   val nestFeaturesViewModel: NestFeaturesViewModel = viewModel()
+               NestFeatures(nestFeaturesViewModel, navHostController)*/
+        }
+        composable(RoutesDefinitions.SETTINGS_NESTS_CONFIGURE) {
+            setNavigationIconVisible(true)
+            screenTitleSetter(stringResource(id = R.string.set_nest_page_title))
+            val configNestViewModel: ConfigureNestViewModel = viewModel()
+            ConfigureNestSettings(configNestViewModel, navHostController)
+        }
+        composable(RoutesDefinitions.FEATURE_DETAILS) {
+            setNavigationIconVisible(true)
+            screenTitleSetter(it.arguments?.getString("featureName"))
+            /*     val viewModel: FeatureDetailsViewModel = viewModel(
+                     factory = FeatureDetailsViewModelFactory(
+                         featureId = UUID.fromString(it.arguments!!.getString("featureId")!!),
+                         featureType = FeatureTypeEnum.valueOf(it.arguments!!.getString("featureType")!!)
+                     )
+                 )
+                 FeatureDetails(featureDetailsViewModel = viewModel)*/
+        }
+    }
+}
+
+@Composable
+fun ManageDialog(
+    cosyNestAppData: CosyNestAppViewData,
+    navHostController: NavHostController
+) {
+    if (cosyNestAppData.applicationInitialized != null && !cosyNestAppData.applicationInitialized) {
+        AlertDialogView(
+            iconId = R.drawable.outline_touch_app_24,
+            titleStringId = R.string.no_nest_configured_dialog_title,
+            textStringId = R.string.no_nest_configured_dialog_message,
+            confirmStringId = R.string.go,
+            dismissable = false,
+            onDismiss = {
+                navHostController.navigate(RoutesDefinitions.SETTINGS_NESTS_CONFIGURE)
+            }
+        )
+    }
 }

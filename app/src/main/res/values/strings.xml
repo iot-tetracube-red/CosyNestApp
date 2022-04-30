@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">CosyNestApp</string>
+    <string name="app_name">Cosy Nest</string>
+
+    <!-- missing configuration dialog -->
+    <string name="no_nest_configured_dialog_title">Missing configuration</string>
+    <string name="no_nest_configured_dialog_message">There is no nest configured on your app. Let\'s go to configure a new one</string>
+
+    <!-- generic strings -->
+    <string name="go">Let\'s go</string>
+
+    <!-- add nests settings -->
+    <string name="set_nest_page_title">Nest settings</string>
 </resources>

@@ -1,6 +1,6 @@
 package red.tetracube.cosynestapp.application.model
 
-import red.tetracube.cosynestapp.enumerations.NavigationIconType
+import red.tetracube.cosynestapp.definitions.NavigationIconType
 import java.util.*
 
 data class CosyNestAppViewData(
