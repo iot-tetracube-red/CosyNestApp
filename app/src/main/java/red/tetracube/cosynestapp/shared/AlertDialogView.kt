@@ -13,13 +13,13 @@ fun AlertDialogView(
     titleStringId: Int,
     textStringId: Int,
     confirmStringId: Int,
-    dismissable: Boolean,
+    dismissible: Boolean,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         icon = { painterResource(id = iconId) },
         onDismissRequest = {
-            if (dismissable) {
+            if (dismissible) {
                 onDismiss()
             }
         },

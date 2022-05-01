@@ -10,4 +10,14 @@
 
     <!-- add nests settings -->
     <string name="set_nest_page_title">Nest settings</string>
+    <string name="config_nest_address_label">Nest hub address</string>
+    <string name="config_nest_username_label">Username</string>
+    <string name="config_nest_password_label">Password</string>
+    <string name="config_nest_save_button">Save</string>
+    <string name="config_nest_dialog_success_title">Success</string>
+    <string name="config_nest_dialog_success_message">Configuration saved</string>
+    <string name="config_nest_dialog_connection_error_title">Error</string>
+    <string name="config_nest_dialog_connection_error_message">Cannot connect to cosy nest hub services</string>
+    <string name="config_nest_dialog_unauthorized_title">Error</string>
+    <string name="config_nest_dialog_unauthorized_message">Cannot access to services due wrong credentials</string>
 </resources>

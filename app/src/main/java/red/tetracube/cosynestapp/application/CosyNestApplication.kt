@@ -174,7 +174,7 @@ fun ManageDialog(
             titleStringId = R.string.no_nest_configured_dialog_title,
             textStringId = R.string.no_nest_configured_dialog_message,
             confirmStringId = R.string.go,
-            dismissable = false,
+            dismissible = false,
             onDismiss = {
                 navHostController.navigate(RoutesDefinitions.SETTINGS_NESTS_CONFIGURE)
             }
