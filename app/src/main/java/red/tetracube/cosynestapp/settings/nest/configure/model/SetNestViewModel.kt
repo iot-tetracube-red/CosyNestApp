@@ -18,6 +18,12 @@ class ConfigureNestViewModel : ViewModel() {
     private val _configureNestViewData = MutableStateFlow(ConfigureNestViewData())
     val configureNestViewData: StateFlow<ConfigureNestViewData> get() = _configureNestViewData
 
+    private val _serviceConnectionStatus = MutableStateFlow(ServiceConnectionStatus.IDLE)
+    val serviceConnectionStatus: StateFlow<ServiceConnectionStatus> get() = _serviceConnectionStatus
+
+    private val _submitButtonEnabled = MutableStateFlow(false)
+    val submitButtonEnabled: StateFlow<Boolean> get() = _submitButtonEnabled
+
     fun updateFormFieldsValues(value: String, field: ConfigureNestFields) {
         when (field) {
             ConfigureNestFields.NEST_ADDRESS -> {
@@ -37,10 +43,9 @@ class ConfigureNestViewModel : ViewModel() {
             }
         }
 
-        val submitButtonEnabled = !_configureNestViewData.value.password.isNullOrEmpty()
+        _submitButtonEnabled.value = !_configureNestViewData.value.password.isNullOrEmpty()
                 && !_configureNestViewData.value.username.isNullOrEmpty()
                 && !_configureNestViewData.value.nestAddress.isNullOrEmpty()
-        _configureNestViewData.value = _configureNestViewData.value.copy(submitButtonEnabled = submitButtonEnabled)
     }
 
     suspend fun saveNest(context: Context) {
@@ -108,8 +113,6 @@ class ConfigureNestViewModel : ViewModel() {
     }
 
     fun setServiceStatus(newStatus: ServiceConnectionStatus) {
-        _configureNestViewData.value = _configureNestViewData.value.copy(
-            serviceConnectionStatus = newStatus
-        )
+        _serviceConnectionStatus.value = newStatus
     }
 }

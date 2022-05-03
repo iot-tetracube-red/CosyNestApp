@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,11 +22,15 @@ import red.tetracube.cosynestapp.application.model.CosyNestAppViewData
 import red.tetracube.cosynestapp.application.model.CosyNestAppViewModel
 import red.tetracube.cosynestapp.definitions.NavigationIconType
 import red.tetracube.cosynestapp.definitions.RoutesDefinitions
+import red.tetracube.cosynestapp.nest.features.model.NestFeaturesViewModel
+import red.tetracube.cosynestapp.nest.features.model.NestFeaturesViewModelFactory
 import red.tetracube.cosynestapp.settings.nest.configure.ConfigureNestSettings
 import red.tetracube.cosynestapp.settings.nest.configure.model.ConfigureNestViewModel
 import red.tetracube.cosynestapp.settings.settingsDataStore
 import red.tetracube.cosynestapp.shared.AlertDialogView
+import red.tetracube.cosynestapp.shared.LoaderOverlay
 import red.tetracube.cosynestapp.ui.theme.CosyNestAppTheme
+import java.util.*
 
 @Composable
 fun CosyNestApplication(
@@ -35,9 +41,9 @@ fun CosyNestApplication(
     val dataStore = appContext.settingsDataStore
     val cosyNestAppData = viewModelData.cosyNestAppState.collectAsState().value
 
-    LaunchedEffect(key1 = Unit, block = {
+    LaunchedEffect(Unit) {
         viewModelData.loadApplicationSettings(dataStore)
-    })
+    }
 
     /*val applicationData = ApplicationData(
         apiBaseURL = cosyNestAppData.apiBaseURL,
@@ -137,11 +143,26 @@ fun MainNavigation(
             .padding(innerPadding)
     ) {
         composable(RoutesDefinitions.HOME) {
-            ManageDialog(cosyNestAppData, navHostController)
-            setNavigationIconVisible(false)
-            screenTitleSetter(null)
-            /*   val nestFeaturesViewModel: NestFeaturesViewModel = viewModel()
-               NestFeatures(nestFeaturesViewModel, navHostController)*/
+            if (cosyNestAppData.applicationInitialized == null) {
+                LoaderOverlay()
+            } else if (!cosyNestAppData.applicationInitialized) {
+                ManageDialog(cosyNestAppData, navHostController)
+            } else {
+                setNavigationIconVisible(false)
+                screenTitleSetter(null)
+                val nestFeaturesViewModel: NestFeaturesViewModel = viewModel(
+                    checkNotNull(LocalViewModelStoreOwner.current),
+                    null,
+                    NestFeaturesViewModelFactory(
+                        cosyNestAppData.nestName!!,
+                        cosyNestAppData.authToken!!,
+                        cosyNestAppData.nestId!!,
+                        cosyNestAppData.apiBaseURL!!,
+                        cosyNestAppData.webSocketURL!!
+                    )
+                )
+                // NestFeatures(nestFeaturesViewModel, navHostController)
+            }
         }
         composable(RoutesDefinitions.SETTINGS_NESTS_CONFIGURE) {
             setNavigationIconVisible(true)

@@ -33,10 +33,14 @@ fun ConfigureNestSettings(
 ) {
     val context = LocalContext.current
     val configureNestDataData = viewModel.configureNestViewData.collectAsState().value
+    val submitButtonEnabled = viewModel.submitButtonEnabled.collectAsState().value
+    val connectionStatus = viewModel.serviceConnectionStatus.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
 
     ConfigureNestSettingsView(
         configureNestDataData,
+        submitButtonEnabled,
+        connectionStatus,
         { value, field -> viewModel.updateFormFieldsValues(value, field) },
         {
             coroutineScope.launch {
@@ -55,12 +59,14 @@ fun ConfigureNestSettings(
 @Composable
 fun ConfigureNestSettingsView(
     configureNestDataData: ConfigureNestViewData,
+    submitButtonEnabled: Boolean,
+    serviceConnectionStatus: ServiceConnectionStatus,
     setFieldValue: (String, ConfigureNestFields) -> Unit,
     onButtonSaveTap: () -> Unit,
     onDialogDismiss: (ServiceConnectionStatus) -> Unit
 ) {
     ServiceConnectionDialog(
-        configureNestDataData.serviceConnectionStatus,
+        serviceConnectionStatus,
         onDialogDismiss
     )
 
@@ -117,7 +123,7 @@ fun ConfigureNestSettingsView(
                 .padding(vertical = 8.dp)
         ) {
             ElevatedButton(
-                enabled = configureNestDataData.submitButtonEnabled,
+                enabled = submitButtonEnabled,
                 onClick = { onButtonSaveTap() }
             ) {
                 Text(text = stringResource(id = R.string.config_nest_save_button))
