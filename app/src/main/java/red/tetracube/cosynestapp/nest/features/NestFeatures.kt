@@ -16,18 +16,18 @@ fun NestFeatures(
     val coroutineScope = rememberCoroutineScope()
     //val swipeRefreshState = rememberSwipeRefreshState(false)
 
-    /*  LaunchedEffect(key1 = nestData.value.nestId, block = {
-          viewModel.loadNestRooms()
-      })
+    LaunchedEffect(Unit) {
+        viewModel.loadNestRooms()
+    }
 
-      NestFeaturesView(
-          nestData.value,
-          swipeRefreshState,
-          navHostController,
-          onRefresh = {
-              coroutineScope.launch {
-                  viewModel.loadNestRooms()
-              }
-          }
-      )*/
+    /*NestFeaturesView(
+        nestData.value,
+        swipeRefreshState,
+        navHostController,
+        onRefresh = {
+            coroutineScope.launch {
+                viewModel.loadNestRooms()
+            }
+        }
+    )*/
 }

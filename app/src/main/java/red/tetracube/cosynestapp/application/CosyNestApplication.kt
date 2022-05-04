@@ -22,6 +22,7 @@ import red.tetracube.cosynestapp.application.model.CosyNestAppViewData
 import red.tetracube.cosynestapp.application.model.CosyNestAppViewModel
 import red.tetracube.cosynestapp.definitions.NavigationIconType
 import red.tetracube.cosynestapp.definitions.RoutesDefinitions
+import red.tetracube.cosynestapp.nest.features.NestFeatures
 import red.tetracube.cosynestapp.nest.features.model.NestFeaturesViewModel
 import red.tetracube.cosynestapp.nest.features.model.NestFeaturesViewModelFactory
 import red.tetracube.cosynestapp.settings.nest.configure.ConfigureNestSettings
@@ -161,7 +162,7 @@ fun MainNavigation(
                         cosyNestAppData.webSocketURL!!
                     )
                 )
-                // NestFeatures(nestFeaturesViewModel, navHostController)
+                NestFeatures(nestFeaturesViewModel, navHostController)
             }
         }
         composable(RoutesDefinitions.SETTINGS_NESTS_CONFIGURE) {
